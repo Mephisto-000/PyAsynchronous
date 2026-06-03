@@ -1,7 +1,7 @@
 [project]
 name = "pyasynchronous"
 version = "0.1.0"
-description = "Add your description here"
+description = "Python 同步與 asyncio 非同步程式設計的新手學習筆記"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = []
