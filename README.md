@@ -88,6 +88,33 @@ uv run python examples/04_event_loop_advanced/manual_event_loop.py
 - 手動建立 event loop 是較底層的寫法，適合理解 `asyncio.run()` 背後做了什麼。
 - 新手不需要在一般應用程式中優先使用這種寫法。
 
+### 5. LLM 呼叫：使用本機 Ollama
+
+先確認本機已啟動 Ollama，並且已安裝 `gemma4:e4b`：
+
+```bash
+ollama list
+```
+
+執行同步版本：
+
+```bash
+uv run python examples/05_llm_with_ollama/sync_ollama_generate.py
+```
+
+再執行非同步版本：
+
+```bash
+uv run python examples/05_llm_with_ollama/async_ollama_generate.py
+```
+
+觀察重點：
+
+- 同步版本會依序等待每一次 LLM 回應。
+- 非同步版本用 `asyncio.to_thread()` 將阻塞式 HTTP 呼叫移到背景 thread，避免阻塞 event loop。
+- 本章使用 Ollama HTTP API，不需要 OpenAI API key，也不新增 Python dependency。
+- 因為本機 LLM 推論會受模型大小、硬體與 Ollama 排程影響，非同步版本不一定會讓推論本身變快，但可以避免應用程式在等待時完全卡住。
+
 ## 常見誤解
 
 ### `async` 不等於多執行緒
@@ -116,8 +143,13 @@ uv run python examples/04_event_loop_advanced/manual_event_loop.py
 │   │   └── single_coroutine.py
 │   ├── 03_concurrent_tasks/
 │   │   └── multiple_tasks.py
-│   └── 04_event_loop_advanced/
-│       └── manual_event_loop.py
+│   ├── 04_event_loop_advanced/
+│   │   └── manual_event_loop.py
+│   └── 05_llm_with_ollama/
+│       ├── README.md
+│       ├── ollama_http.py
+│       ├── sync_ollama_generate.py
+│       └── async_ollama_generate.py
 ├── pyproject.toml
 └── uv.lock
 ```
